@@ -29,12 +29,12 @@ void setup() {
 
   WiFi.mode(WIFI_STA); // Set the WiFi mode to station mode
   // Replace "PHONE_HOTSPOT_SSID" and "PHONE_HOTSPOT_PASSWORD" with your phone hotspot's SSID and password
-  WiFi.begin("Ice Caffe", "icecaffe2019");
+  WiFi.begin("Ice Caffe", "icecaffe2019");  //NOTE connect to current connected WiFi
   while (WiFi.status() != WL_CONNECTED) { // Wait until the NodeMCU has connected to the phone hotspot
     delay(1000);
-    Serial.println("Connecting to phone hotspot...");
+    Serial.println("Connecting to WiFi...");
   }
-  Serial.println("Connected to phone hotspot");
+  Serial.println("Connected to WiFi");
   //----------------------------------------------------------------------------------
 }
 
@@ -57,17 +57,32 @@ void loop() {
    WiFiClient client;
    HTTPClient  http;
 
-   http.begin(client,"http://192.168.1.19:7004/api/scan/" + cardID); // TODO: connect to local wifi
+   http.begin(client,"http://192.168.1.19:7004/api/scan/" + cardID); // NOTE: connect to local wifi
 
-   int httpCode = http.GET();
-   Serial.println(httpCode);
+   int httpCodeScan = http.GET();
+   Serial.println(httpCodeScan);
 
-   if(httpCode==200){
+   if(httpCodeScan==200){
      String response = http.getString();
      Serial.println(response);
+     //Two-way auth check
+     http.begin(client, "http://192.168.1.19:7004/api/is-two-way-auth");
+     int httpAuth = http.GET();
+     Serial.println(httpAuth);
+     String responseAuth = http.getString();
+     Serial.println(responseAuth);
+     while (responseAuth=="false") {
+      http.begin(client, "http://192.168.1.19:7004/api/is-two-way-auth");
+      httpAuth = http.GET();
+      responseAuth = http.getString();
+      Serial.println(responseAuth);
+     }
+
    }
    else{
      Serial.println("CARD CANNOT BE AUTHORIZED!");
    }
+
+
   }
 }
