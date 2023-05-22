@@ -60,11 +60,10 @@ void loop() {
    http.begin(client,"http://192.168.1.19:7004/api/scan/" + cardID); // NOTE: connect to local wifi
 
    int httpCodeScan = http.GET();
-   Serial.println(httpCodeScan);
 
    if(httpCodeScan==200){
      String response = http.getString();
-     Serial.println(response);
+
      //Two-way auth check
      http.begin(client, "http://192.168.1.19:7004/api/is-two-way-auth");
      int httpAuth = http.GET();
