@@ -18,14 +18,14 @@ void setup() {
   wdt_enable(WDTO_8S);
   // CODE FOR PREPARING RFID READER
 
-  Serial.begin(115200);   // Initialize serial communication
+  Serial.begin(115200);   // Initialize serial communication // set to 9600 if we are only scanning without wifi
   SPI.begin();          // Initialize SPI bus
   mfrc522.PCD_Init();   // Initialize MFRC522 RFID reader
   Serial.println("Ready to scan RFID cards...");
   //----------------------------------------------------------------------------------
 
 
-  // CODE FOR FIRST API ENDPOINT
+  // CONNECTING TO WIFI
 
   WiFi.mode(WIFI_STA); // Set the WiFi mode to station mode
   // Replace "PHONE_HOTSPOT_SSID" and "PHONE_HOTSPOT_PASSWORD" with your phone hotspot's SSID and password
