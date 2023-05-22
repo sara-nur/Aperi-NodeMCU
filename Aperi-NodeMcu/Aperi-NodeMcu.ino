@@ -11,6 +11,11 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create an instance of the MFRC522 class
 
 void setup() {
 
+
+  // Set the Watchdog Timer prescaler value to 8 seconds
+  // Available prescaler options: WDTO_15MS, WDTO_30MS, WDTO_60MS, WDTO_120MS, WDTO_250MS,
+  // WDTO_500MS, WDTO_1S, WDTO_2S, WDTO_4S, WDTO_8S
+  wdt_enable(WDTO_8S);
   // CODE FOR PREPARING RFID READER
 
   Serial.begin(115200);   // Initialize serial communication
@@ -24,7 +29,7 @@ void setup() {
 
   WiFi.mode(WIFI_STA); // Set the WiFi mode to station mode
   // Replace "PHONE_HOTSPOT_SSID" and "PHONE_HOTSPOT_PASSWORD" with your phone hotspot's SSID and password
-  WiFi.begin("Harris", "aperi_test");
+  WiFi.begin("Ice Caffe", "icecaffe2019");
   while (WiFi.status() != WL_CONNECTED) { // Wait until the NodeMCU has connected to the phone hotspot
     delay(1000);
     Serial.println("Connecting to phone hotspot...");
@@ -34,6 +39,8 @@ void setup() {
 }
 
 void loop() {
+
+  wdt_reset();
   // Check if a new RFID card has been detected
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
     // Get the RFID card's unique ID
@@ -50,7 +57,7 @@ void loop() {
    WiFiClient client;
    HTTPClient  http;
 
-   http.begin(client,"http://192.168.1.3:7004/api/scan/95381EE7"); // TODO: connect to local wifi
+   http.begin(client,"http://192.168.1.19:7004/api/scan/" + cardID); // TODO: connect to local wifi
 
    int httpCode = http.GET();
    Serial.println(httpCode);
