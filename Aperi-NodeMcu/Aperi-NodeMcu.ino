@@ -9,8 +9,14 @@
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create an instance of the MFRC522 class
 
+//const int motorPin = D0;
+//const int motorSpeed = 255;
+
+
+
 void setup() {
 
+  //pinMode(motorPin, OUTPUT);3
 
   // Set the Watchdog Timer prescaler value to 8 seconds
   // Available prescaler options: WDTO_15MS, WDTO_30MS, WDTO_60MS, WDTO_120MS, WDTO_250MS,
@@ -29,7 +35,7 @@ void setup() {
 
   WiFi.mode(WIFI_STA); // Set the WiFi mode to station mode
   // Replace "PHONE_HOTSPOT_SSID" and "PHONE_HOTSPOT_PASSWORD" with your phone hotspot's SSID and password
-  WiFi.begin("Ice Caffe", "icecaffe2019");  //NOTE connect to current connected WiFi
+  WiFi.begin("net_4363", "kontrabaskontrabas");  //NOTE connect to current connected WiFi
   while (WiFi.status() != WL_CONNECTED) { // Wait until the NodeMCU has connected to the phone hotspot
     delay(1000);
     Serial.println("Connecting to WiFi...");
@@ -39,6 +45,11 @@ void setup() {
 }
 
 void loop() {
+
+  //digitalWrite(motorPin, HIGH);
+  //delay(2000);
+  //digitalWrite(motorPin, LOW);
+  //delay(1000)
 
   wdt_reset();
   // Check if a new RFID card has been detected
@@ -57,7 +68,7 @@ void loop() {
    WiFiClient client;
    HTTPClient  http;
 
-   http.begin(client,"http://192.168.1.19:7004/api/scan/" + cardID); // NOTE: connect to local wifi
+   http.begin(client,"http://192.168.1.8:7004/api/scan/" + cardID); // NOTE: connect to local wifi
 
    int httpCodeScan = http.GET();
 
@@ -65,19 +76,19 @@ void loop() {
      String response = http.getString();
 
      //Two-way auth check
-     http.begin(client, "http://192.168.1.19:7004/api/is-two-way-auth");
+     http.begin(client, "http://192.168.1.8:7004/api/is-two-way-auth");
      int httpAuth = http.GET();
      Serial.println(httpAuth);
      String responseAuth = http.getString();
      Serial.println(responseAuth);
      while (responseAuth=="false") {
-      http.begin(client, "http://192.168.1.19:7004/api/is-two-way-auth");
+      http.begin(client, "http://192.168.1.8:7004/api/is-two-way-auth");
       httpAuth = http.GET();
       responseAuth = http.getString();
       Serial.println(responseAuth);
      }
 
-   }
+   } 
    else{
      Serial.println("CARD CANNOT BE AUTHORIZED!");
    }
@@ -85,3 +96,49 @@ void loop() {
 
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
